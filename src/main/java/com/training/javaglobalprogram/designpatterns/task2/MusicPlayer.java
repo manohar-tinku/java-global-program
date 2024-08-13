@@ -1,20 +1,20 @@
 package com.training.javaglobalprogram.designpatterns.task2;
 
+import com.training.javaglobalprogram.designpatterns.task2.impl.StoppedState;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MusicPlayer implements Player {
     private List<String> tracks = new ArrayList<>();
-    private boolean isPlaying;
-    private boolean isStopped;
-    private boolean isRepeatOn;
+    private PlayerState state;
     private int currentTrackIndex;
+    private boolean isRepeatOn;
 
     public MusicPlayer(List<String> tracks) {
         currentTrackIndex = 0;
-        isPlaying = false;
-        isStopped = true;
         isRepeatOn = false;
+        this.state = new StoppedState(this);
         this.tracks=tracks;
     }
 
@@ -24,17 +24,7 @@ public class MusicPlayer implements Player {
      */
     @Override
     public void playOrPause() {
-        if (isStopped) {
-            isPlaying = true;
-            isStopped = false;
-            System.out.println("Playing: " + tracks.get(currentTrackIndex));
-        } else {
-            if (!isPlaying) {
-                System.out.println("Playing: " + tracks.get(currentTrackIndex));
-            } else {
-                System.out.println("Paused: " + tracks.get(currentTrackIndex));
-            }
-        }
+        state.playOrPause();
     }
 
     /**
@@ -43,13 +33,7 @@ public class MusicPlayer implements Player {
      */
     @Override
     public void stop() {
-        if (isStopped) {
-            System.out.println("Already stopped");
-        } else {
-            isStopped = true;
-            isPlaying = false;
-            System.out.println("Stopping: " + tracks.get(currentTrackIndex));
-        }
+       state.stop();
     }
 
     /**
@@ -58,19 +42,7 @@ public class MusicPlayer implements Player {
      */
     @Override
     public void next() {
-        if (currentTrackIndex < tracks.size() - 1) {
-            currentTrackIndex++;
-            isPlaying = true;
-            isStopped = false;
-            System.out.println("Playing next track: " + tracks.get(currentTrackIndex));
-        } else if (isRepeatOn) {
-            currentTrackIndex = 0;
-            isPlaying = true;
-            isStopped = false;
-            System.out.println("Replaying first track: " + tracks.get(currentTrackIndex));
-        } else {
-            System.out.println("Already on the last track");
-        }
+        state.next();
     }
 
     /**
@@ -78,14 +50,7 @@ public class MusicPlayer implements Player {
      */
     @Override
     public void previous() {
-        if (currentTrackIndex > 0) {
-            currentTrackIndex--;
-            isPlaying = true;
-            isStopped = false;
-            System.out.println("Playing previous track: " + tracks.get(currentTrackIndex));
-        } else {
-            System.out.println("Already on the first track");
-        }
+       state.previous();
     }
 
     /**
@@ -95,9 +60,45 @@ public class MusicPlayer implements Player {
     public void repeatOnOrOff() {
         if (!isRepeatOn) {
             isRepeatOn=true;
-            System.out.println("Repeat on");
+            logInfo("Repeat on");
         } else {
-            System.out.println("Repeat off");
+            logInfo("Repeat off");
         }
+    }
+
+    public static void logInfo(String message) {
+        System.out.println(message);
+    }
+
+    public List<String> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(List<String> tracks) {
+        this.tracks = tracks;
+    }
+
+    public PlayerState getState() {
+        return state;
+    }
+
+    public void setState(PlayerState state) {
+        this.state = state;
+    }
+
+    public int getCurrentTrackIndex() {
+        return currentTrackIndex;
+    }
+
+    public void setCurrentTrackIndex(int currentTrackIndex) {
+        this.currentTrackIndex = currentTrackIndex;
+    }
+
+    public boolean isRepeatOn() {
+        return isRepeatOn;
+    }
+
+    public void setRepeatOn(boolean repeatOn) {
+        isRepeatOn = repeatOn;
     }
 }
