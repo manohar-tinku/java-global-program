@@ -15,8 +15,8 @@ public class SessionManagerTest {
     @BeforeAll
     public static void setUp() {
         sessionManager = new SessionManager();
-        adminUser = new User("manohar"); // Assuming this user has admin rights in the config
-        normalUser = new User("guru");   // Assuming this user has user rights in the config
+        adminUser = new User("manohar");
+        normalUser = new User("guru");
     }
 
     @Test
